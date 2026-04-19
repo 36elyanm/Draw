@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SketchFold Studio</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="app">
+    <header class="header">
+      <div class="logo">
+        <div class="logo-shapes">
+          <span class="shape s1"></span>
+          <span class="shape s2"></span>
+          <span class="shape s3"></span>
+        </div>
+        <div class="logo-text">
+          <h1>Sketch<span>Fold</span></h1>
+          <p class="subtitle">Transform photos into sketches & folding guides</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Upload Card -->
+    <div class="card upload-card" id="uploadCard">
+      <input type="file" id="fileInput" accept="image/*" hidden />
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-anim">
+          <div class="upload-ring"></div>
+          <span class="material-symbols-rounded upload-icon">add_photo_alternate</span>
+        </div>
+        <h3>Drop your photo here</h3>
+        <p>or <button class="text-btn" id="browseBtn">browse files</button></p>
+        <div class="upload-chips">
+          <span class="chip">JPG</span>
+          <span class="chip">PNG</span>
+          <span class="chip">WebP</span>
+          <span class="chip">Any size</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thumbnail Bar -->
+    <div class="thumb-bar hidden" id="thumbBar">
+      <div class="thumb-preview">
+        <img id="thumbImg" src="" alt="preview" />
+      </div>
+      <div class="thumb-info">
+        <span class="thumb-name" id="fileName">image.jpg</span>
+        <span class="thumb-dims" id="fileDims">0 × 0</span>
+      </div>
+      <button class="icon-btn" id="btnChange" title="Change image">
+        <span class="material-symbols-rounded">swap_horiz</span>
+      </button>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="card mode-card hidden" id="modeCard">
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="draw" id="tabDraw">
+          <span class="material-symbols-rounded tab-icon">draw</span>
+          <span class="tab-label">Draw Mode</span>
+          <span class="tab-desc">Line sketch effect</span>
+        </button>
+        <button class="mode-tab" data-mode="fold" id="tabFold">
+          <span class="material-symbols-rounded tab-icon">grid_on</span>
+          <span class="tab-label">Fold Mode</span>
+          <span class="tab-desc">Folding grid guide</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Draw Controls -->
+    <div class="card controls-card hidden" id="drawCard">
+      <div class="card-header">
+        <span class="material-symbols-rounded card-icon">tune</span>
+        <h3>Sketch Settings</h3>
+      </div>
+      <div class="control-item">
+        <div class="control-label">
+          <span class="material-symbols-rounded">contrast</span>
+          <span>Edge Sensitivity</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" id="edgeStrength" min="1" max="200" value="80" class="slider slider-blue" />
+          <span class="slider-val" id="edgeVal">80</span>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-label">
+          <span class="material-symbols-rounded">line_weight</span>
+          <span>Line Thickness</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" id="lineWeight" min="0" max="100" value="50" class="slider slider-pink" />
+          <span class="slider-val" id="lineVal">50</span>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-label">
+          <span class="material-symbols-rounded">blur_on</span>
+          <span>Smoothing</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" id="smoothing" min="0" max="5" value="1" class="slider slider-green" />
+          <span class="slider-val" id="smoothVal">1</span>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div class="control-label">
+          <span class="material-symbols-rounded">invert_colors</span>
+          <span>Invert Colors</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="invertToggle" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div class="control-label">
+          <span class="material-symbols-rounded">palette</span>
+          <span>Color Sketch</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="colorToggle" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Fold Controls -->
+    <div class="card controls-card hidden" id="foldCard">
+      <div class="card-header">
+        <span class="material-symbols-rounded card-icon">grid_view</span>
+        <h3>Grid Settings</h3>
+      </div>
+      <div class="control-item">
+        <div class="control-label">
+          <span class="material-symbols-rounded">view_column</span>
+          <span>Columns</span>
+        </div>
+        <div class="stepper-row">
+          <button class="step-btn" data-target="foldCols" data-dir="-1"><span class="material-symbols-rounded">remove</span></button>
+          <span class="step-val" id="colVal">3</span>
+          <button class="step-btn" data-target="foldCols" data-dir="1"><span class="material-symbols-rounded">add</span></button>
+          <input type="hidden" id="foldCols" value="3" />
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-label">
+          <span class="material-symbols-rounded">table_rows</span>
+          <span>Rows</span>
+        </div>
+        <div class="stepper-row">
+          <button class="step-btn" data-target="foldRows" data-dir="-1"><span class="material-symbols-rounded">remove</span></button>
+          <span class="step-val" id="rowVal">3</span>
+          <button class="step-btn" data-target="foldRows" data-dir="1"><span class="material-symbols-rounded">add</span></button>
+          <input type="hidden" id="foldRows" value="3" />
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-label">
+          <span class="material-symbols-rounded">line_style</span>
+          <span>Line Style</span>
+        </div>
+        <div class="pill-group">
+          <button class="pill active" data-style="dashed">Dashed</button>
+          <button class="pill" data-style="solid">Solid</button>
+          <button class="pill" data-style="dotted">Dotted</button>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-label">
+          <span class="material-symbols-rounded">opacity</span>
+          <span>Guide Opacity</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" id="guideOpacity" min="10" max="100" value="70" class="slider slider-orange" />
+          <span class="slider-val" id="opacityVal">70%</span>
+        </div>
+      </div>
+      <div class="color-row">
+        <div class="control-label">
+          <span class="material-symbols-rounded">colorize</span>
+          <span>Guide Color</span>
+        </div>
+        <div class="color-swatches">
+          <button class="swatch active" data-color="#FF3B30" style="background:#FF3B30"></button>
+          <button class="swatch" data-color="#FF9500" style="background:#FF9500"></button>
+          <button class="swatch" data-color="#34C759" style="background:#34C759"></button>
+          <button class="swatch" data-color="#007AFF" style="background:#007AFF"></button>
+          <button class="swatch" data-color="#AF52DE" style="background:#AF52DE"></button>
+          <button class="swatch" data-color="#FFFFFF" style="background:#FFFFFF;border:2px solid #ccc"></button>
+          <input type="color" id="guideColor" value="#FF3B30" class="custom-color" title="Custom" />
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div class="control-label">
+          <span class="material-symbols-rounded">pin</span>
+          <span>Panel Numbers</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="numbersToggle" checked />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Canvas -->
+    <div class="card canvas-card hidden" id="canvasCard">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="mainCanvas"></canvas>
+        <canvas id="foldOverlay"></canvas>
+        <div class="canvas-loader hidden" id="canvasLoader">
+          <div class="loader-spinner"></div>
+          <span>Rendering...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step-by-Step Instructions -->
+    <div class="card instructions-card hidden" id="instructionsCard">
+      <div class="card-header">
+        <span class="material-symbols-rounded card-icon" style="color:var(--orange)">format_list_numbered</span>
+        <h3 id="instructionsTitle">Step-by-Step Guide</h3>
+      </div>
+      <div class="instructions-body" id="instructionsBody"></div>
+      <div class="instructions-footer">
+        <button class="action-btn btn-steps" id="btnPrintSteps">
+          <span class="material-symbols-rounded">print</span>
+          Print Steps
+        </button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-bar hidden" id="actionBar">
+      <button class="action-btn btn-reset" id="btnReset">
+        <span class="material-symbols-rounded">restart_alt</span>
+        Start Over
+      </button>
+      <button class="action-btn btn-guide" id="btnGuide">
+        <span class="material-symbols-rounded">auto_fix_high</span>
+        Get Steps
+      </button>
+      <button class="action-btn btn-download" id="btnDownload">
+        <span class="material-symbols-rounded">download</span>
+        Save Image
+      </button>
+    </div>
+
+    <footer class="footer">
+      <span class="material-symbols-rounded footer-icon">lock</span>
+      <p>100% private — everything runs locally in your browser</p>
+    </footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
