@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draw &amp; Fold Studio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>Draw &amp; Fold Studio</h1>
+    <p>Turn photos into line sketches or add fold grid guides</p>
+  </header>
+
+  <main>
+
+    <!-- Mode Toggle -->
+    <div class="mode-toggle" role="tablist" aria-label="Mode selection">
+      <button class="mode-btn active" data-mode="draw" role="tab" aria-selected="true">
+        <span class="mode-icon">✏️</span>
+        <span class="mode-label">Draw Mode</span>
+        <span class="mode-sub">Photo → sketch</span>
+      </button>
+      <button class="mode-btn" data-mode="fold" role="tab" aria-selected="false">
+        <span class="mode-icon">📐</span>
+        <span class="mode-label">Fold Mode</span>
+        <span class="mode-sub">Folding grid guide</span>
+      </button>
+    </div>
+
+    <!-- Upload Zone -->
+    <section class="upload-section" id="uploadSection">
+      <div class="upload-zone" id="uploadZone" tabindex="0" role="button"
+           aria-label="Upload a photo">
+        <div class="upload-content">
+          <div class="upload-icon">📷</div>
+          <p class="upload-title">Drop a photo here</p>
+          <p class="upload-sub">or <span class="upload-link">click to browse</span></p>
+          <p class="upload-hint">JPG · PNG · WebP · GIF</p>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" hidden aria-hidden="true">
+    </section>
+
+    <!-- Workspace (shown after upload) -->
+    <section class="workspace" id="workspace" hidden>
+
+      <!-- Controls Sidebar -->
+      <aside class="controls-panel">
+
+        <!-- Draw Controls -->
+        <div id="drawControls">
+          <h2>Sketch Settings</h2>
+
+          <div class="field">
+            <label>Style</label>
+            <div class="chip-group" id="sketchStyleGroup">
+              <button class="chip active" data-sketch="line">Line Art</button>
+              <button class="chip" data-sketch="pencil">Pencil</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="edgeStrength">
+              Edge Strength
+              <output id="strengthOut" for="edgeStrength">50</output>
+            </label>
+            <input type="range" id="edgeStrength" min="10" max="150" value="50">
+          </div>
+
+          <label class="toggle-row">
+            <input type="checkbox" id="invertSketch">
+            <span class="toggle-label">Dark background</span>
+          </label>
+
+          <button class="apply-btn" id="applySketch">Apply Sketch</button>
+        </div>
+
+        <!-- Fold Controls -->
+        <div id="foldControls" hidden>
+          <h2>Fold Settings</h2>
+
+          <div class="field">
+            <label>Pattern</label>
+            <div class="chip-group" id="foldPatternGroup">
+              <button class="chip active" data-fold="square">Square</button>
+              <button class="chip" data-fold="diamond">Diamond</button>
+              <button class="chip" data-fold="radial">Radial</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="gridSize">
+              Cell Size
+              <output id="gridSizeOut" for="gridSize">60</output>
+              <span class="unit">px</span>
+            </label>
+            <input type="range" id="gridSize" min="20" max="200" value="60">
+          </div>
+
+          <div class="field">
+            <label for="gridOpacity">
+              Opacity
+              <output id="opacityOut" for="gridOpacity">70</output>
+              <span class="unit">%</span>
+            </label>
+            <input type="range" id="gridOpacity" min="10" max="100" value="70">
+          </div>
+
+          <div class="field field-row">
+            <label for="gridColor">Line Color</label>
+            <input type="color" id="gridColor" value="#2563eb">
+          </div>
+
+          <button class="apply-btn" id="applyFold">Apply Grid</button>
+        </div>
+
+      </aside>
+
+      <!-- Canvas Area -->
+      <div class="canvas-area">
+        <div class="canvas-wrap">
+          <canvas id="mainCanvas"></canvas>
+          <div class="canvas-loader" id="loader" hidden>
+            <div class="spinner"></div>
+            <span>Processing…</span>
+          </div>
+        </div>
+        <div class="canvas-actions">
+          <button class="btn-outline" id="resetBtn">↩ Reset</button>
+          <button class="btn-primary" id="downloadBtn">⬇ Download</button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
